@@ -2,6 +2,7 @@
 #include "../include/utils/bce_loss.h"
 #include <iostream>
 #include <fstream>
+#include <ranges>
 
 NeuralNetwork::NeuralNetwork() {
   // Initialize network parameters if needed
@@ -33,8 +34,8 @@ void NeuralNetwork::train(const std::vector<std::vector<double>>& data, const st
       std::vector<double> grad_output = computeBCEGradient(activation, { labels[i] });
 
       // Backward Pass
-      for(auto it = layers_.rbegin(); it != layers_.rend(); ++it) {
-        grad_output = (*it)->backward(grad_output);
+      for(auto & layer : std::ranges::reverse_view(layers_)) {
+        grad_output = layer->backward(grad_output);
       }
 
       // Update Weights

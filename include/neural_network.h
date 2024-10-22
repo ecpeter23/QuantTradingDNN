@@ -1,7 +1,3 @@
-//
-// Created by Eli Peter on 10/21/24.
-//
-
 #ifndef QUANT_TRADING_DNN_NEURAL_NETWORK_H
 #define QUANT_TRADING_DNN_NEURAL_NETWORK_H
 
@@ -20,7 +16,7 @@ public:
     void loadModel(const std::string& filepath);
 
     std::vector<int> predict(const std::vector<std::vector<double>>& data);
-private:
+protected:
     std::vector<std::unique_ptr<Layer>> layers_;
     // Add any necessary member variables, e.g., loss function, optimizer
 };
@@ -29,6 +25,5 @@ template <typename LayerType, typename... Args>
 void NeuralNetwork::addLayer(Args&&... args) {
   layers_.emplace_back(std::make_unique<LayerType>(std::forward<Args>(args)...));
 }
-
 
 #endif //QUANT_TRADING_DNN_NEURAL_NETWORK_H
