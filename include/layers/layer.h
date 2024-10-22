@@ -5,6 +5,7 @@
 #include <memory>
 #include <fstream>
 #include <string>
+#include <variant>
 
 /**
  * Base class for all neural network layers.
@@ -21,11 +22,16 @@ public:
       is_training_ = is_training;
     }
 
-    // Forward pass: pure virtual to be implemented by derived layers (flattened 2D input)
-    virtual std::vector<double> forward(const std::vector<double>& input) = 0;
+    /**
+     * Generalized forward pass using variant to support 1D, 2D, 3D, or 4D tensors.
+     */
+    using Tensor = std::variant<std::vector<double>, std::vector<std::vector<double>>,
+            std::vector<std::vector<std::vector<double>>>,
+            std::vector<std::vector<std::vector<std::vector<double>>>>>;
 
-    // Backward pass for gradient propagation (flattened 2D input)
-    virtual std::vector<double> backward(const std::vector<double>& gradOutput) = 0;
+    virtual Tensor forward(const Tensor& input) = 0;
+
+    virtual Tensor backward(const Tensor& gradOutput) = 0;
 
     // Update weights (if the layer has any)
     virtual void updateWeights(double learningRate) = 0;
@@ -36,7 +42,7 @@ public:
     // Load layer parameters from file
     static std::unique_ptr<Layer> load(std::ifstream& ifs);
 
-    // Optional: Helper to identify layer type (for debugging/logging)
+    // Helper to identify layer type (for debugging/logging)
     [[nodiscard]] virtual std::string layerType() const = 0;
 };
 

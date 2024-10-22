@@ -5,7 +5,7 @@
 #include "../../include/layers/batch_norm.h"
 #include "../../include/layers/conv1d.h"
 #include "../../include/layers/dense_activation.h"
-#include "../../include/layers/dropout.h"
+#include "layers/utility/dropout.h"
 #include "../../include/layers/lstm.h"
 #include "../../include/layers/residual.h"
 

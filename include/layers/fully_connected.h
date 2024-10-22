@@ -1,7 +1,3 @@
-//
-// Created by Eli Peter on 10/21/24.
-//
-
 #ifndef QUANT_TRADING_DNN_FULLY_CONNECTED_H
 #define QUANT_TRADING_DNN_FULLY_CONNECTED_H
 

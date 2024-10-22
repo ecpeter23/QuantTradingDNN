@@ -9,8 +9,8 @@ add_library(quant_trading_dnn_lib
         layers/fully_connected.cpp
         layers/activation.cpp
         utils/math.cpp
-        layers/dropout.cpp
-        ../include/layers/dropout.h
+        layers/util/dropout.cpp
+        ../include/layers/util/dropout.h
         layers/batch_norm.cpp
         ../include/layers/batch_norm.h
         layers/lstm.cpp
@@ -33,6 +33,12 @@ add_library(quant_trading_dnn_lib
         ../include/layers/pooling.h
         layers/embedding.cpp
         ../include/layers/embedding.h
+        layers/conv2d.cpp
+        ../include/layers/conv2d.h
+        layers/conv3d.cpp
+        ../include/layers/conv3d.h
+        ../include/layers/util/flatten.h
+        ../include/layers/util/reshape.h
 )
 
 # Specify include directories for the library
@@ -45,7 +51,8 @@ target_link_libraries(quant_trading_dnn_lib PRIVATE ${ACCELERATE_FRAMEWORK})
 
 # Create the main executable
 add_executable(quant_trading_dnn main.cpp
-        ../include/utils/types.h)
+        ../include/utils/types.h
+        ../include/layers/util/reshape.h)
 
 # Link the library to the executable
 target_link_libraries(quant_trading_dnn PRIVATE quant_trading_dnn_lib)
