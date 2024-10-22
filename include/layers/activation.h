@@ -1,18 +1,9 @@
-//
-// Created by Eli Peter on 10/21/24.
-//
-
 #ifndef QUANT_TRADING_DNN_ACTIVATION_H
 #define QUANT_TRADING_DNN_ACTIVATION_H
 
 #include "layer.h"
 #include <vector>
-
-enum class ActivationType {
-    ReLU,
-    Sigmoid,
-    Tanh
-};
+#include "utils/types.h"
 
 class Activation : public Layer {
 public:
@@ -23,6 +14,7 @@ public:
 
     void save(std::ofstream &ofs) const override;
     static std::unique_ptr<Layer> load(std::ifstream &ifs);
+
 private:
     ActivationType type_;
     std::vector<double> input_;

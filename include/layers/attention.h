@@ -18,7 +18,7 @@ public:
     void save(std::ofstream& ofs) const override;
     static std::unique_ptr<Layer> load(std::ifstream& ifs);
 
-private:
+public:
     size_t input_size_;
     size_t attention_size_;
 

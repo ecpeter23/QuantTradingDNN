@@ -18,7 +18,7 @@ public:
     void save(std::ofstream& ofs) const override;
     static std::unique_ptr<Layer> load(std::ifstream& ifs);
 
-private:
+public:
     std::shared_ptr<Layer> subLayer_;
 };
 

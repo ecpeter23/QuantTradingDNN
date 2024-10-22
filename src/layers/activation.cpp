@@ -1,24 +1,28 @@
 #include "../../include/layers/activation.h"
 #include <algorithm>
+#include <Accelerate/Accelerate.h>
 #include <cmath>
 
 Activation::Activation(ActivationType type) : type_(type) {}
 
 std::vector<double> Activation::forward(const std::vector<double>& input) {
+  // Assume input is a flattened 2D vector: features x batch_size
+  // For example, for 3 features and batch_size 2: [f1s1, f1s2, f2s1, f2s2, f3s1, f3s2]
   input_ = input;
   std::vector<double> output(input.size(), 0.0);
+
+
   switch(type_) {
     case ActivationType::ReLU:
-      std::transform(input.begin(), input.end(), output.begin(),
-                     [](double x) { return x > 0 ? x : 0.0; });
+      vDSP_vthrD(input.data(), 1, nullptr, output.data(), 1, input.size());
       break;
     case ActivationType::Sigmoid:
-      std::transform(input.begin(), input.end(), output.begin(),
-                     [](double x) { return 1.0 / (1.0 + std::exp(-x)); });
+      std::transform(input.begin(), input.end(), output.begin(), [](double x) {
+          return 1.0 / (1.0 + std::exp(-x));
+      });
       break;
     case ActivationType::Tanh:
-      std::transform(input.begin(), input.end(), output.begin(),
-                     [](double x) { return std::tanh(x); });
+      vvtanh(output.data(), input.data(), reinterpret_cast<const int *>(input.size()));
       break;
   }
   return output;

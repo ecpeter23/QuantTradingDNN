@@ -13,7 +13,7 @@ public:
     void save(std::ofstream& ofs) const override;
     static std::unique_ptr<Layer> load(std::ifstream& ifs);
 
-private:
+public:
     size_t input_channels_;
     size_t output_channels_;
     size_t kernel_size_;

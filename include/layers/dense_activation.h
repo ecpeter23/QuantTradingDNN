@@ -2,14 +2,10 @@
 #define QUANT_TRADING_DNN_DENSE_ACTIVATION_H
 
 #include "layer.h"
+#include "utils/types.h"
 #include <vector>
 #include <memory>
 
-enum class ActivationType {
-    ReLU,
-    Sigmoid,
-    Tanh
-};
 
 class DenseActivation : public Layer {
 public:
@@ -20,7 +16,7 @@ public:
     void save(std::ofstream& ofs) const override;
     static std::unique_ptr<Layer> load(std::ifstream& ifs);
 
-private:
+public:
     size_t input_size_;
     size_t output_size_;
     ActivationType activation_;

@@ -3,11 +3,14 @@
 
 #include "layer.h"
 #include <vector>
+#include <memory>
+#include <fstream>
 
 class BatchNorm : public Layer {
 public:
     explicit BatchNorm(size_t num_features, double momentum = 0.9, double epsilon = 1e-5);
-    std::vector<double> forward(const std::vector<double>& input) override;
+
+    std::vector<double> forward(const std::vector<double>& input, bool is_training) override;
     std::vector<double> backward(const std::vector<double>& gradOutput) override;
     void updateWeights(double learningRate) override;
     void save(std::ofstream& ofs) const override;
@@ -30,7 +33,8 @@ private:
     std::vector<double> std_inv_;
     std::vector<double> grad_gamma_;
     std::vector<double> grad_beta_;
+
+    // Additional variables for batch handling
 };
 
-
-#endif //QUANT_TRADING_DNN_BATCH_NORM_H
+#endif // QUANT_TRADING_DNN_BATCH_NORM_H

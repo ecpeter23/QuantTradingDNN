@@ -15,7 +15,7 @@ public:
     void save(std::ofstream& ofs) const override;
     static std::unique_ptr<Layer> load(std::ifstream& ifs);
 
-private:
+public:
     double rate_;
     std::vector<bool> mask_;
     std::mt19937 gen_;
