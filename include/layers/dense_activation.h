@@ -1,13 +1,9 @@
-//
-// Created by Eli Peter on 10/22/24.
-//
-
 #ifndef QUANT_TRADING_DNN_DENSE_ACTIVATION_H
 #define QUANT_TRADING_DNN_DENSE_ACTIVATION_H
 
 #include "layer.h"
 #include <vector>
-#include <functional>
+#include <memory>
 
 enum class ActivationType {
     ReLU,
@@ -29,16 +25,20 @@ private:
     size_t output_size_;
     ActivationType activation_;
 
-    std::vector<std::vector<double>> weights_;
-    std::vector<double> biases_;
+    std::vector<std::vector<double>> weights_; // [output_size_][input_size_]
+    std::vector<double> biases_;               // [output_size_]
 
     // Gradients
-    // ...
+    std::vector<std::vector<double>> grad_weights_; // [output_size_][input_size_]
+    std::vector<double> grad_biases_;               // [output_size_]
+
+    // Caching for backward pass
+    std::vector<double> input_;    // Cached input vector
+    std::vector<double> linear_;   // Cached linear transformation outputs
 
     // Activation functions
     double activate(double x) const;
     double activateDerivative(double x) const;
 };
-
 
 #endif //QUANT_TRADING_DNN_DENSE_ACTIVATION_H
