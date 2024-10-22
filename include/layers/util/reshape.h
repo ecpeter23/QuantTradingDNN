@@ -43,7 +43,11 @@ public:
 
     void updateWeights(double /*learningRate*/) override {}
 
+    // TODO: Implement save and load functions
     void save(std::ofstream& /*ofs*/) const override {}
+    static std::unique_ptr<Layer> load(std::ifstream& /*ifs*/) {
+      throw std::runtime_error("Reshape: Load function not implemented");
+    }
 
     [[nodiscard]] std::string layerType() const override {
       return "Reshape";
