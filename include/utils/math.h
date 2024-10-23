@@ -5,11 +5,52 @@
 #ifndef QUANT_TRADING_DNN_MATH_H
 #define QUANT_TRADING_DNN_MATH_H
 
+#include <Accelerate/Accelerate.h>
+#include <cassert>
 #include <vector>
 #include <cmath>
 
 // Matrix-vector multiplication using Accelerate framework
-std::vector<double> matMul(const std::vector<std::vector<double>>& matrix, const std::vector<double>& vec);
+std::vector<double> matMul(const std::vector<std::vector<double>>& matrix, const std::vector<double>& vec) {
+  size_t rows = matrix.size();
+  size_t cols = matrix[0].size();
+  assert(vec.size() == cols && "Matrix columns must match vector size");
+
+  std::vector<double> result(rows, 0.0);
+
+  // Flatten the matrix for Accelerate
+  std::vector<double> flatMatrix;
+  flatMatrix.reserve(rows * cols);
+  for(const auto& row : matrix) {
+    flatMatrix.insert(flatMatrix.end(), row.begin(), row.end());
+  }
+
+  // Perform matrix-vector multiplication: y = A * x
+  // cblas_dgemv expects column-major order by default, but we're using row-major
+  // So we set CblasRowMajor
+  cblas_dgemv(CblasRowMajor, CblasNoTrans, static_cast<int>(rows), static_cast<int>(cols),
+              1.0, flatMatrix.data(), static_cast<int>(cols),
+              vec.data(), 1, 0.0, result.data(), 1);
+
+  return result;
+}
+
+// Element-wise operations
+template <typename T>
+void applyElementWise(std::vector<T>& data, T(*func)(T)) {
+  size_t size = data.size();
+  for (size_t i = 0; i < size; ++i) {
+    data[i] = func(data[i]);
+  }
+}
+
+template <typename T>
+void applyElementWise(std::vector<T>& data, double multiplier, T(*func)(T, double)) {
+  size_t size = data.size();
+  for (size_t i = 0; i < size; ++i) {
+    data[i] = func(data[i], multiplier);
+  }
+}
 
 // ACTIVATION FUNCTIONS AND DERIVATIVES
 inline double relu_derivative(double x) {
@@ -68,8 +109,10 @@ inline double gelu(double x) {
 }
 
 inline double gelu_derivative(double x) {
-  double t = std::tanh(std::sqrt(2.0 / M_PI) * (x + 0.044715 * std::pow(x, 3)));
-  return 0.5 * (1.0 + t) + 0.5 * x * (1.0 - t * t) * (std::sqrt(2.0 / M_PI) * (1.0 + 3.0 * 0.044715 * x * x));
+  double tanh_inner = std::sqrt(2.0 / M_PI) * (x + 0.044715 * std::pow(x, 3));
+  double t = std::tanh(tanh_inner);
+  double sech2 = 1.0 - t * t;
+  return 0.5 * (1.0 + t) + 0.5 * x * sech2 * (std::sqrt(2.0 / M_PI) * (1.0 + 3.0 * 0.044715 * x * x));
 }
 
 inline double mish(double x) {
@@ -78,8 +121,8 @@ inline double mish(double x) {
 
 inline double mish_derivative(double x) {
   double e_x = std::exp(x);
-  double tanh_arg = std::log(1.0 + e_x);
-  double tanh_val = std::tanh(tanh_arg);
+  double log_term = std::log(1.0 + e_x);
+  double tanh_val = std::tanh(log_term);
   double sech2 = 1.0 - tanh_val * tanh_val;
   return tanh_val + x * sech2 * (e_x / (1.0 + e_x));
 }
