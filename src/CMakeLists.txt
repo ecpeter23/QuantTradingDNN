@@ -12,7 +12,6 @@ add_library(quant_trading_dnn_lib
         layers/layer.cpp
         layers/fully_connected.cpp
         layers/activation.cpp
-        utils/math.cpp
         layers/batch_norm.cpp
         layers/lstm.cpp
         layers/conv1d.cpp

@@ -3,7 +3,6 @@
 #define MTK_PRIVATE_IMPLEMENTATION
 #define CA_PRIVATE_IMPLEMENTATION
 #include "../../include/layers/activation.h"
-#include "../../include/utils/math.h"
 #include <Metal/Metal.hpp>
 #include <AppKit/AppKit.hpp>
 #include <MetalKit/MetalKit.hpp>
