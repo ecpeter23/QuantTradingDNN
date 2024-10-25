@@ -25,7 +25,6 @@ add_library(quant_trading_dnn_lib
         layers/embedding.cpp
         layers/conv2d.cpp
         layers/conv3d.cpp
-        ../include/utils/activation_types.h
         ../include/layers/util/dropout.h
         ../include/layers/batch_norm.h
         ../include/layers/lstm.h
@@ -42,6 +41,9 @@ add_library(quant_trading_dnn_lib
         ../include/layers/conv3d.h
         ../include/layers/util/flatten.h
         ../include/layers/util/reshape.h
+        ../include/utils/activations.h
+        ../include/tensor.h
+        activations.cpp
 )
 
 # Specify include directories for the library
