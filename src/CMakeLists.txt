@@ -43,7 +43,7 @@ add_library(quant_trading_dnn_lib
         ../include/layers/util/reshape.h
         ../include/utils/activations.h
         ../include/tensor.h
-        activations.cpp
+        utils/activations.cpp
 )
 
 # Specify include directories for the library
