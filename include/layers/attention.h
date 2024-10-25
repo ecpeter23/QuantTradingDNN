@@ -18,8 +18,8 @@
 
 class Attention : public Layer {
 public:
-    Attention(MTL::Device* device, size_t input_size, size_t attention_size);
-    ~Attention();
+    [[maybe_unused]] Attention(MTL::Device* device, size_t input_size, size_t attention_size);
+    ~Attention() override;
     Tensor forward(const Tensor& input) override;
     Tensor backward(const Tensor& gradOutput) override;
     void updateWeights(double learningRate) override;
