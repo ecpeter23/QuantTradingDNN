@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <variant>
+#include "tensor.h"
 
 /**
  * Base class for all neural network layers.
@@ -21,13 +22,6 @@ public:
     void setTrainingMode(bool is_training) {
       is_training_ = is_training;
     }
-
-    /**
-     * Generalized forward pass using variant to support 1D, 2D, 3D, or 4D tensors.
-     */
-    using Tensor = std::variant<std::vector<double>, std::vector<std::vector<double>>,
-            std::vector<std::vector<std::vector<double>>>,
-            std::vector<std::vector<std::vector<std::vector<double>>>>>;
 
     virtual Tensor forward(const Tensor& input) = 0;
 

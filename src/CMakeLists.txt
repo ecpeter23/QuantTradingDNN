@@ -25,7 +25,7 @@ add_library(quant_trading_dnn_lib
         layers/embedding.cpp
         layers/conv2d.cpp
         layers/conv3d.cpp
-        ../include/utils/types.h
+        ../include/utils/activation_types.h
         ../include/layers/util/dropout.h
         ../include/layers/batch_norm.h
         ../include/layers/lstm.h

@@ -33,7 +33,7 @@ Activation::Activation(ActivationType type, bool useGPU, int axis, int num_linea
 }
 
 // Forward pass: Choose between CPU and GPU implementations
-Layer::Tensor Activation::forward(const Tensor& input) {
+Tensor Activation::forward(const Tensor& input) {
   input_ = input;
   if (useGPU_) {
     throw std::runtime_error("GPU-based activation functions not implemented.");
@@ -42,10 +42,11 @@ Layer::Tensor Activation::forward(const Tensor& input) {
 }
 
 // CPU-based activation implementations using Accelerate and manual functions
-Layer::Tensor Activation::applyCPUActivation(const Tensor& input) {
+Tensor Activation::applyCPUActivation(const Tensor& input) {
   Tensor output;
   switch (type_) {
     case ActivationType::ReLU:
+      output = input.relu();
     case ActivationType::LeakyReLU:
     case ActivationType::ParametricReLU:
     case ActivationType::ELU:
@@ -216,7 +217,7 @@ Layer::Tensor Activation::applyCPUActivation(const Tensor& input) {
   return output;
 }
 
-Layer::Tensor Activation::applyCPUMaxout(const Tensor& input) {
+Tensor Activation::applyCPUMaxout(const Tensor& input) {
   // Maxout is applied across a specified axis with num_linear_ linear pieces
   // Flatten the tensor, determine the size along the axis, apply Maxout
 
@@ -271,7 +272,7 @@ Layer::Tensor Activation::applyCPUMaxout(const Tensor& input) {
   return output;
 }
 
-Layer::Tensor Activation::applyCPUSoftmax(const Tensor& input) {
+Tensor Activation::applyCPUSoftmax(const Tensor& input) {
   // Softmax is applied along a specified axis
   // Flatten the tensor, determine the size along the axis, apply Softmax per slice
 
@@ -326,7 +327,7 @@ Layer::Tensor Activation::applyCPUSoftmax(const Tensor& input) {
 }
 
 // Backward pass: Compute gradients
-Layer::Tensor Activation::backward(const Tensor& gradOutput) {
+Tensor Activation::backward(const Tensor& gradOutput) {
   Tensor gradInput;
   switch (type_) {
     case ActivationType::ReLU:
@@ -634,7 +635,7 @@ std::vector<double> Activation::flattenTensor(const Layer::Tensor& tensor) {
   return result;
 }
 
-Layer::Tensor Activation::reshapeTensor(const std::vector<double>& flat, const std::vector<size_t>& shape) {
+Tensor Activation::reshapeTensor(const std::vector<double>& flat, const std::vector<size_t>& shape) {
   // Depending on the shape, reconstruct the tensor
   if (shape.empty()) {
     throw std::invalid_argument("Shape cannot be empty.");
@@ -642,7 +643,7 @@ Layer::Tensor Activation::reshapeTensor(const std::vector<double>& flat, const s
 
   // Handle 1D, 2D, 3D, and 4D tensors
   if (shape.size() == 1) {
-    return Layer::Tensor(std::vector<double>(flat));
+    return Tensor(std::vector<double>(flat));
   } else if (shape.size() == 2) {
     std::vector<std::vector<double>> tensor2D(shape[0], std::vector<double>(shape[1]));
     size_t idx = 0;
@@ -651,7 +652,7 @@ Layer::Tensor Activation::reshapeTensor(const std::vector<double>& flat, const s
         tensor2D[i][j] = flat[idx++];
       }
     }
-    return Layer::Tensor(tensor2D);
+    return Tensor(tensor2D);
   } else if (shape.size() == 3) {
     std::vector<std::vector<std::vector<double>>> tensor3D(shape[0],
                                                            std::vector<std::vector<double>>(shape[1], std::vector<double>(shape[2])));
@@ -663,7 +664,7 @@ Layer::Tensor Activation::reshapeTensor(const std::vector<double>& flat, const s
         }
       }
     }
-    return Layer::Tensor(tensor3D);
+    return Tensor(tensor3D);
   } else if (shape.size() == 4) {
     std::vector<std::vector<std::vector<std::vector<double>>>> tensor4D(shape[0],
                                                                         std::vector<std::vector<std::vector<double>>>(shape[1],
@@ -678,7 +679,7 @@ Layer::Tensor Activation::reshapeTensor(const std::vector<double>& flat, const s
         }
       }
     }
-    return Layer::Tensor(tensor4D);
+    return Tensor(tensor4D);
   } else {
     throw std::invalid_argument("Only 1D to 4D tensors are supported.");
   }

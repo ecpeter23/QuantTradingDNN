@@ -10,12 +10,13 @@ class BatchNorm : public Layer {
 public:
     explicit BatchNorm(size_t num_features, double momentum = 0.9, double epsilon = 1e-5);
 
-    std::vector<double> forward(const std::vector<double>& input, bool is_training) override;
-    std::vector<double> backward(const std::vector<double>& gradOutput) override;
+    Tensor forward(const Tensor& input) override;
+    Tensor backward(const Tensor& gradOutput) override;
     void updateWeights(double learningRate) override;
     void save(std::ofstream& ofs) const override;
     static std::unique_ptr<Layer> load(std::ifstream& ifs);
 
+    [[nodiscard]] std::string layerType() const override { return "Batch Normalization"; }
 private:
     size_t num_features_;
     double momentum_;

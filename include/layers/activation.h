@@ -2,7 +2,7 @@
 #define QUANT_TRADING_DNN_ACTIVATION_H
 
 #include "layer.h"
-#include "../utils/types.h"
+#include "../utils/activation_types.h"
 #include "../utils/math.h"
 #include <vector>
 #include <Accelerate/Accelerate.h>

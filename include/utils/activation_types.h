@@ -1,5 +1,5 @@
-#ifndef QUANT_TRADING_DNN_TYPES_H
-#define QUANT_TRADING_DNN_TYPES_H
+#ifndef QUANT_TRADING_DNN_ACTIVATION_TYPES_H
+#define QUANT_TRADING_DNN_ACTIVATION_TYPES_H
 
 
 enum class ActivationType {
@@ -28,4 +28,4 @@ enum class ActivationType {
     TanhExp           // Tanh-Exponential hybrid
 };
 
-#endif //QUANT_TRADING_DNN_TYPES_H
+#endif //QUANT_TRADING_DNN_ACTIVATION_TYPES_H
